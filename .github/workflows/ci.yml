@@ -1,0 +1,25 @@
+name: CI Pipeline - App Zapatillas
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Usamos Linux
+    steps:
+      - name: Descargar el código fuente
+        uses: actions/checkout@v4
+
+      - name: Ejecutar scripts en Bash
+        run: |
+          echo "Revisando el entorno Linux..."
+          uname -a
+          echo "Código descargado correctamente."
+
+      - name: Construir la imagen de Docker
+        run: |
+          echo "Construyendo imagen Docker..."
+          docker build -t app-zapatillas:latest .
+          echo "¡Construcción exitosa!"
