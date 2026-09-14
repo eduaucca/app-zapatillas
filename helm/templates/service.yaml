@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: servicio-zapatillas
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "{{ .Values.puerto }}"
+    prometheus.io/path: "/metrics"
+spec:
+  selector:
+    # IMPORTANTE: Esta etiqueta debe coincidir con la que pusiste en tu deployment
+    app: {{ .Release.Name }}-web
+  ports:
+    - protocol: TCP
+      port: {{ .Values.puerto }}
+      targetPort: {{ .Values.puerto }}

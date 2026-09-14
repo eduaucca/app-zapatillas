@@ -1,0 +1,5 @@
+replicaCount: 2
+image: app-zapatillas:v2
+cpuLimit: "100m"
+memoryLimit: "128Mi"
+puerto: 3000

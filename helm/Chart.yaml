@@ -1,0 +1,4 @@
+apiVersion: v2
+name: mi-nginx
+description: Mi primer chart dinámico para Kubernetes
+version: 0.1.0
