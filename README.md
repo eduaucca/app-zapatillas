@@ -1,54 +1,42 @@
+# App Shoes - DevOps & Zero Trust Cloud Architecture
 
+Proyecto personal de infraestructura y despliegue continuo centrado en seguridad, automatización y buenas prácticas en la nube. 
 
-# App Shoes - DevOps \& Zero Trust Cloud Architecture
+El objetivo principal de este proyecto es desplegar una aplicación web en un clúster de Kubernetes en Azure (AKS) conectándose a un Blob Storage privado sin utilizar ninguna credencial estática ni contraseñas, aplicando una arquitectura Zero Trust real mediante identidades federadas.
 
-Proyecto personal de infraestructura y despliegue continuo centrado en seguridad, automatizacion y buenas practicas en la nube.
-El objetivo principal de este proyecto es desplegar una aplicacion web en un cluster de Kubernetes en Azure (AKS) conectandose a un Blob Storage privado sin utilizar ninguna credencial estatica ni contraseñas, aplicando una arquitectura Zero Trust real mediante identidades federadas.
+---
 
-=======
+## Stack Tecnológico
 
-# 
+- **Aplicación:** Node.js (Express)
+- **Contenedores:** Docker
+- **Orquestación:** Kubernetes y Helm Charts
+- **Infra Cloud:** Terraform para provisionar clústeres AKS y Blob Storage en Azure
+- **Observabilidad:** Prometheus (prom-client)
 
-# 
+---
 
+## Cómo está estructurado
 
+- `terraform/`: Código de infraestructura para levantar la red, el grupo de recursos, el clúster AKS (con OIDC habilitado) y el Storage Account privado.
+- `helm/`: Plantillas parametrizadas para desplegar la aplicación en Kubernetes separando entornos y configurando las anotaciones necesarias para la inyección de identidad.
+- `src/`: Aplicación en Node.js que utiliza el SDK oficial de Azure (`DefaultAzureCredential`) para autenticarse en el clúster de forma nativa.
 
-# Como esta estructurado
+---
 
-* terraform/: Codigo de infraestructura para levantar la red, el grupo de recursos, el cluster AKS (con OIDC habilitado) y el Storage Account privado.
-* helm/: Plantillas parametrizadas para desplegar la aplicacion en Kubernetes separando entornos y configurando las anotaciones necesarias para la inyeccion de identidad.
-* src/: Aplicacion en Node.js que utiliza el SDK oficial de Azure (DefaultAzureCredential) para autenticarse en el cluster de forma nativa.
+## Arquitectura de Seguridad (Zero Trust)
 
-
-
-
-
-# Arquitectura de Seguridad (Zero Trust)
-
-En lugar de guardar una Connection String o claves de acceso en el codigo o en variables de entorno inseguras, el flujo funciona asi:
-
-1. Terraform crea una Managed Identity en Azure y configura el cluster AKS con OpenID Connect (OIDC).
+En lugar de guardar una Connection String o claves de acceso en el código o en variables de entorno inseguras, el flujo funciona así:
+1. Terraform crea una Managed Identity en Azure y configura el clúster AKS con OpenID Connect (OIDC).
 2. Mediante una Federated Identity Credential, se vincula la ServiceAccount de Kubernetes con la identidad de Azure.
-3. Al arrancar la aplicacion, el cluster inyecta de forma transparente un token temporal en el Pod.
-4. El SDK de Node.js detecta ese token automaticamente y lee las imagenes del Storage Account privado sin exponer ningun secreto.
+3. Al arrancar la aplicación, el clúster inyecta de forma transparente un token temporal en el Pod.
+4. El SDK de Node.js detecta ese token automáticamente y lee las imágenes del Storage Account privado sin exponer ningún secreto.
 
+---
 
+## Infraestructura (Terraform)
 
-# Infraestructura (Terraform)
-
-=======
-
-# El objetivo principal de este proyecto es desplegar una aplicacion web en un cluster de Kubernetes en Azure (AKS) conectandose a un Blob Storage privado sin utilizar ninguna credencial estatica ni contraseñas, aplicando una arquitectura Zero Trust real mediante identidades federadas.
-
-# 
-
-# 
-
-
-
-# Tecnologias Utilizadas
-
-<<<<<<< HEAD
+La carpeta `terraform` contiene la configuración modularizada para desplegar el clúster en Microsoft Azure (AKS). Para inicializar y validar los cambios:
 
 ```bash
 cd terraform
@@ -56,54 +44,5 @@ az login
 terraform init
 terraform plan
 terraform apply
-=======
-# 
 
-# \\- Cloud: Microsoft Azure (AKS, Blob Storage, Managed Identities, RBAC)
-
-# \\- Infraestructura como Codigo: Terraform
-
-# \\- Orquestacion y Despliegue: Kubernetes, Docker, Helm Charts
-
-# \\- Aplicacion y Observabilidad: Node.js, @azure/identity, @azure/storage-blob, Prometheus (prom-client)
-
-# 
-
-# \\---
-
-# 
-
-# Como esta estructurado
-
-# 
-
-# \\- terraform/: Codigo de infraestructura para levantar la red, el grupo de recursos, el cluster AKS (con OIDC habilitado) y el Storage Account privado.
-
-# \\- helm/: Plantillas parametrizadas para desplegar la aplicacion en Kubernetes separando entornos y configurando las anotaciones necesarias para la inyeccion de identidad.
-
-# \\- src/: Aplicacion en Node.js que utiliza el SDK oficial de Azure (DefaultAzureCredential) para autenticarse en el cluster de forma nativa.
-
-# 
-
-# \\---
-
-# 
-
-# Arquitectura de Seguridad (Zero Trust)
-
-# 
-
-# En lugar de guardar una Connection String o claves de acceso en el codigo o en variables de entorno inseguras, el flujo funciona asi:
-
-# 1\\. Terraform crea una Managed Identity en Azure y configura el cluster AKS con OpenID Connect (OIDC).
-
-# 2\\. Mediante una Federated Identity Credential, se vincula la ServiceAccount de Kubernetes con la identidad de Azure.
-
-# 3\\. Al arrancar la aplicacion, el cluster inyecta de forma transparente un token temporal en el Pod.
-
-# 4\\. El SDK de Node.js detecta ese token automaticamente y lee las imagenes del Storage Account privado sin exponer ningun secreto.
-
-
-# Despliegue con Helm
-helm upgrade --install release-shoes ./helm
 
