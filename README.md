@@ -1,6 +1,7 @@
-# App Zapatillas - DevOps \& Cloud Infra
+# App Shoes - DevOps & Zero Trust Cloud Architecture
+Proyecto personal de infraestructura y despliegue continuo centrado en seguridad, automatizacion y buenas practicas en la nube. 
+El objetivo principal de este proyecto es desplegar una aplicacion web en un cluster de Kubernetes en Azure (AKS) conectandose a un Blob Storage privado sin utilizar ninguna credencial estatica ni contraseñas, aplicando una arquitectura Zero Trust real mediante identidades federadas.
 
-Este repositorio contiene la infraestructura, el ciclo de despliegue y el código de una aplicación web (Node.js). El objetivo principal del proyecto es aplicar el enfoque de Infraestructura como Código (IaC) y automatizar el ciclo de vida completo de la aplicación.
 
 ## Stack Tecnológico
 
@@ -11,16 +12,21 @@ Este repositorio contiene la infraestructura, el ciclo de despliegue y el códig
 * **Infra Cloud:** Terraform para provisionar clústeres AKS (Azure).
 * **Observabilidad:** Prometheus y Grafana.
 
-## Estructura del repositorio
+# Como esta estructurado
 
-* `.github/workflows/`: Pipeline de CI para construir y subir la imagen.
-* `terraform/`: Ficheros `.tf` para levantar la infraestructura en Azure.
-* `helm/`: Plantillas de Helm para desplegar en K8s.
-* `src/` y `Dockerfile`: Código fuente de la app y su receta de contenedor.
+- terraform/: Codigo de infraestructura para levantar la red, el grupo de recursos, el cluster AKS (con OIDC habilitado) y el Storage Account privado.
+- helm/: Plantillas parametrizadas para desplegar la aplicacion en Kubernetes separando entornos y configurando las anotaciones necesarias para la inyeccion de identidad.
+- src/: Aplicacion en Node.js que utiliza el SDK oficial de Azure (DefaultAzureCredential) para autenticarse en el cluster de forma nativa.
 
-## Flujo del proyecto
+# Arquitectura de Seguridad (Zero Trust)
 
-### 1\. Infraestructura (Terraform)
+En lugar de guardar una Connection String o claves de acceso en el codigo o en variables de entorno inseguras, el flujo funciona asi:
+1. Terraform crea una Managed Identity en Azure y configura el cluster AKS con OpenID Connect (OIDC).
+2. Mediante una Federated Identity Credential, se vincula la ServiceAccount de Kubernetes con la identidad de Azure.
+3. Al arrancar la aplicacion, el cluster inyecta de forma transparente un token temporal en el Pod.
+4. El SDK de Node.js detecta ese token automaticamente y lee las imagenes del Storage Account privado sin exponer ningun secreto.
+
+# Infraestructura (Terraform)
 
 La carpeta `/terraform` contiene la configuración modularizada para desplegar un clúster de Kubernetes en Microsoft Azure (AKS). Para simular los cambios antes de aplicar:
 
@@ -29,4 +35,7 @@ cd terraform
 az login
 terraform init
 terraform plan
+terraform apply
 
+# Despliegue con Helm
+helm upgrade --install release-shoes ./helm
