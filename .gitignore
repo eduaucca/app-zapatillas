@@ -3,3 +3,7 @@ node_modules/
 *.tfstate.*
 *.tfstate.backup
 *.swp
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+*.tfstate
+

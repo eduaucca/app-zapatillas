@@ -1,7 +1,7 @@
 # Grupo de recursos
 resource "azurerm_resource_group" "rg" {
   name     = "rg-shoes-dev"
-  location = "eastus" # Servidores en Europa
+  location = "eastus" # Servidores en EE.UU, para limitaciones de regiones
 }
 
 # Cluster de Kubernetes (AKS)
