@@ -1,5 +1,5 @@
 replicaCount: 2
-image: app-zapatillas:v2
+image: eduaucca/app-shoes:v3
 cpuLimit: "100m"
 memoryLimit: "128Mi"
 puerto: 3000

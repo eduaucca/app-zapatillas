@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-zapatillas
+  name: {{ .Release.Name }}-shoes
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -10,8 +10,10 @@ spec:
   template:
     metadata:
       labels:
+        azure.workload.identity/use: "true" #Activa la inyección de Azure
         app: {{ .Release.Name }}-web
     spec:
+      serviceAccountName: shoes-sa #Vincula el Pod con la identidad
       containers:
       - name: servidor-web
         image: {{ .Values.image }}

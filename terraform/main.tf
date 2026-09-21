@@ -1,20 +1,22 @@
 # Grupo de recursos
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-zapatillas-dev"
-  location = "westeurope" # Servidores en Europa
+  name     = "rg-shoes-dev"
+  location = "eastus" # Servidores en Europa
 }
 
 # Cluster de Kubernetes (AKS)
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "aks-zapatillas-cluster"
+  name                = "aks-shoes-cluster"
   location            = azurerm_resource_group.rg.location
+  oidc_issuer_enabled       = true
+  workload_identity_enabled = true
   resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "akszapatillas"
+  dns_prefix          = "aksshoes"
 
   default_node_pool {
     name       = "default"
     node_count = 1
-    vm_size    = "Standard_B2s" # Tamaño de máquina virtual básico
+    vm_size    = "Standard_D2s_v7" # Tamaño de máquina virtual básico
   }
 
   identity {
@@ -23,7 +25,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   tags = {
     Environment = "Development"
-    Project     = "App Zapatillas"
+    Project     = "App Shoes"
     ManagedBy   = "Terraform"
   }
 }

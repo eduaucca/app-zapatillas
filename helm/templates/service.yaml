@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: servicio-zapatillas
+  name: servicio-shoes
   annotations:
     prometheus.io/scrape: "true"
     prometheus.io/port: "{{ .Values.puerto }}"
